@@ -40,7 +40,7 @@ nav ul{
 
 #logo-txt{
     font-size: 35px;
-    color: antiquewhite;
+    color: #bbe6c8;
 }
 
 /*-------Button Style-----*/
@@ -83,8 +83,11 @@ nav ul{
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
-    font-size: 15px;
+    font-size: 17px;
+    scrollbar-width: 20px; /* Sets the width of the scrollbar */
+    scrollbar-color: #6d63b3 #292542; /* Sets the thumb and track color */
 }
+
 
 #chat-input {
     width: calc(100% - 100px);
@@ -95,6 +98,7 @@ nav ul{
     background-color: #dceafc;
     outline: none;
 }
+
 
 #send-btn {
     padding: 10px 20px;
@@ -116,7 +120,7 @@ nav ul{
 }
 
 .bot-message {
-    background-color: #6d63b3;
+    background-color: #857dbb;
     color: #dceafc;
     padding: 10px;
     border-radius: 10px;
