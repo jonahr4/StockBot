@@ -59,6 +59,7 @@ async function sendMessage() {
         botMessage.innerHTML = botResponse.replace(/\n/g, '<br>'); // Convert \n to <br>
         botMessage.classList.add('bot-message');
         chatDisplay.appendChild(botMessage);
+        chatDisplay.scrollTop = chatDisplay.scrollHeight;
     }
 }
 
