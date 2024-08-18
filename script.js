@@ -1,4 +1,5 @@
 //JONAH ROTHMAN STOCKBOT JAVASCRIPT
+//sk-2pyZBm9kyq-HIVqTQhDM4MeW25QGQs7ZM4ptaY6SloT3BlbkFJZulvQj6Wi-jVx2GwDj7vygkCu7UFx32cItxwriJ6IA
 
 // When User Sends a message to the bot by clicking the send button
 document.getElementById('send-btn').addEventListener('click', sendMessage);
@@ -34,100 +35,30 @@ async function sendMessage() {
 
         //Display Chatbot Response
         const botResponse = await getBotResponse(userTxt);
+        
+        // Convert newline characters to <br> tags
         const botMessage = document.createElement('p');
-        botMessage.textContent = botResponse;
+        botMessage.innerHTML = botResponse.replace(/\n/g, '<br>'); // Convert \n to <br>
         botMessage.classList.add('bot-message');
         chatDisplay.appendChild(botMessage);
     }
 }
 
 
-// Function to get the bot response from OpenAI API
+
 async function getBotResponse(userText) {
-    const url = `https://api.openai.com/v1/assistants/${assistantId}/threads`;
-    const betaHeader = 'assistants=v2';
-
     try {
-        // Step 1: Create a Thread
-        const threadResponse = await fetch(url, {
+        const response = await fetch('http://localhost:3000/get-response', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-                'OpenAI-Beta': betaHeader, // Required for v2 API
             },
-            body: JSON.stringify({
-                model: "gpt-4", // Use the correct model associated with your assistant if needed
-            }),
+            body: JSON.stringify({ message: userText }),
         });
-
-        if (!threadResponse.ok) {
-            throw new Error(`Thread creation failed: ${threadResponse.statusText}`);
-        }
-
-        const thread = await threadResponse.json();
-        const threadId = thread.id;
-
-        if (!threadId) {
-            throw new Error('Thread ID is undefined.');
-        }
-
-        // Step 2: Add a Message to the Thread
-        const messageResponse = await fetch(`${url}/${threadId}/messages`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-                'OpenAI-Beta': betaHeader,
-            },
-            body: JSON.stringify({
-                role: "user",
-                content: userText
-            }),
-        });
-
-        if (!messageResponse.ok) {
-            throw new Error(`Message creation failed: ${messageResponse.statusText}`);
-        }
-
-        // Step 3: Create a Run
-        const runResponse = await fetch(`${url}/${threadId}/runs`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-                'OpenAI-Beta': betaHeader,
-            },
-        });
-
-        if (!runResponse.ok) {
-            throw new Error(`Run creation failed: ${runResponse.statusText}`);
-        }
-
-        const run = await runResponse.json();
-
-        if (run.status === 'completed') {
-            const messagesResponse = await fetch(`${url}/${threadId}/messages`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`,
-                    'OpenAI-Beta': betaHeader,
-                },
-            });
-
-            if (!messagesResponse.ok) {
-                throw new Error(`Fetching messages failed: ${messagesResponse.statusText}`);
-            }
-
-            const messages = await messagesResponse.json();
-            return messages.data.reverse()[0].content[0].text.value;
-        } else {
-            console.log(run.status);
-            return "Sorry, I couldn't process your request.";
-        }
+        const data = await response.json();
+        return data.botResponse;
     } catch (error) {
-        console.error('Error:', error.message);
-        return "An error occurred while processing your request.";
+        console.error('Error:', error);
+        return 'Sorry, something went wrong.';
     }
 }
