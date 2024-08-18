@@ -11,6 +11,24 @@ document.getElementById('chat-input').addEventListener('keydown', function(event
     }
 });
 
+// Add event listener to the New Chat button
+document.getElementById('newchat-btn').addEventListener('click', startNewChat);
+
+// Function to start a new chat
+async function startNewChat() {
+    // Clear the chat display
+    const chatDisplay = document.getElementById('chat-display');
+    chatDisplay.innerHTML = ''; // Clear all messages
+
+    //Display Chatbot Greeting Response
+    const botResponse = await getBotResponse("New chat Message clicked. All messages are wiped. Greet user for a new chat");
+
+    // Convert newline characters to <br> tags
+    const botMessage = document.createElement('p');
+    botMessage.innerHTML = botResponse.replace(/\n/g, '<br>'); // Convert \n to <br>
+    botMessage.classList.add('bot-message');
+    chatDisplay.appendChild(botMessage);
+}
 
 //Funcrtion to display message on the chatbox
 async function sendMessage() {
@@ -35,7 +53,7 @@ async function sendMessage() {
 
         //Display Chatbot Response
         const botResponse = await getBotResponse(userTxt);
-        
+
         // Convert newline characters to <br> tags
         const botMessage = document.createElement('p');
         botMessage.innerHTML = botResponse.replace(/\n/g, '<br>'); // Convert \n to <br>
