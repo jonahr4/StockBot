@@ -66,7 +66,8 @@ async function sendMessage() {
 
 async function getBotResponse(userText) {
     try {
-        const response = await fetch('http://localhost:3000/get-response', {
+        //const response = await fetch('http://localhost:3000/get-response', {
+        const response = await fetch('https://stockbot-server-cb5a559b9c8a.herokuapp.com/get-response', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
